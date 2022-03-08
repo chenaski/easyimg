@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/chenaski/easyimg/issues"
   },
-  "homepage": "https://github.com/chenaski/easyimg#readme"
+  "homepage": "https://github.com/chenaski/easyimg#readme",
+  "devDependencies": {
+    "git-conventional-commits": "^1.2.0"
+  }
 }
