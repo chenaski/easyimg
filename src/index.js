@@ -21,16 +21,8 @@ export async function easyimg(options) {
   for (const encodedImage of Object.values(image.encodedWith)) {
     await fs.mkdir(options.outDir, { recursive: true });
     const resultImage = await encodedImage;
-    await fs.writeFile(
-      `${path.resolve(options.outDir, srcFileName)}.${resultImage.extension}`,
-      resultImage.binary
-    );
+    await fs.writeFile(`${path.resolve(options.outDir, srcFileName)}.${resultImage.extension}`, resultImage.binary);
   }
 
   await imagePool.close();
 }
-
-(async () => {
-  const options = { filePath: process.argv[2], outDir: process.argv[3] };
-  await easyimg(options);
-})();
