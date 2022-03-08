@@ -6,6 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "simple-git-hooks": {
+    "commit-msg": "npx git-conventional-commits commit-msg-hook \"$1\""
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/chenaski/easyimg.git"
@@ -18,6 +21,7 @@
   },
   "homepage": "https://github.com/chenaski/easyimg#readme",
   "devDependencies": {
-    "git-conventional-commits": "^1.2.0"
+    "git-conventional-commits": "^1.2.0",
+    "simple-git-hooks": "^2.7.0"
   }
 }
