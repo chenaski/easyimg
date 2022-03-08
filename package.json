@@ -1,0 +1,20 @@
+{
+  "name": "easyimg",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chenaski/easyimg.git"
+  },
+  "keywords": [],
+  "author": "Eugene Boruhov <mail2chenaski@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chenaski/easyimg/issues"
+  },
+  "homepage": "https://github.com/chenaski/easyimg#readme"
+}
