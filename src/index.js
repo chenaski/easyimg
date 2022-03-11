@@ -3,10 +3,10 @@ import { cpus } from "os";
 import fs from "fs/promises";
 import path from "path";
 
-export async function easyimg(options) {
+export async function easyimg(filePath, options) {
   const imagePool = new ImagePool(cpus().length);
-  const file = await fs.readFile(options.filePath);
-  const { name: srcFileName } = path.parse(options.filePath);
+  const file = await fs.readFile(filePath);
+  const { name: srcFileName } = path.parse(filePath);
   const image = imagePool.ingestImage(file);
 
   const encodeOptions = {
