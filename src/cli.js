@@ -1,6 +1,7 @@
 import { easyimg } from "./index.js";
 import { program } from "commander";
 import Joi from "joi";
+import { logError } from "./logError.js";
 
 (async () => {
   program.option("-o, --out-dir <path>", "Output directory");
@@ -16,7 +17,8 @@ import Joi from "joi";
   const validationResult = schema.validate({ filePath, ...options });
 
   if (validationResult.error) {
-    throw new Error(validationResult.error);
+    logError(validationResult.error);
+    process.exit(1);
   }
 
   await easyimg(validationResult.value);
