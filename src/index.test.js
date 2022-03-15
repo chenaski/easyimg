@@ -6,49 +6,79 @@ import path from "path";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const outDirPath = path.resolve(__dirname, "../out");
 const fixturesDirPath = path.resolve(__dirname, "../fixtures");
-const originalImagePath = path.resolve(fixturesDirPath, "test.jpg");
+const fixtureImagesPath = (await fs.readdir(fixturesDirPath)).map((fileName) => path.join(fixturesDirPath, fileName));
+const extByCodec = {
+  oxipng: ".png",
+  mozjpeg: ".jpg",
+  webp: ".webp",
+  avif: ".avif",
+  jxl: ".jxl",
+};
 
 const rmOutDir = async () => {
   await fs.rm(outDirPath, { force: true, recursive: true });
 };
-const getOriginalFileSize = async () => {
-  const { size } = await fs.lstat(originalImagePath);
-  return size;
-};
-const getOutDirFilesMeta = async () => {
-  const filePaths = await fs.readdir(outDirPath);
-  return Promise.all(
-    filePaths.map(async (fileName) => {
-      const filePath = path.resolve(outDirPath, fileName);
-      const { size } = await fs.lstat(filePath);
 
-      return {
-        filePath,
-        size,
-      };
+const originalFilesMeta = (
+  await Promise.all(
+    fixtureImagesPath.map(async (filePath) => {
+      const { name: id, ext } = path.parse(filePath);
+      const { size } = await fs.lstat(filePath);
+      return [id, ext, size];
     })
-  );
+  )
+).reduce((result, [id, ext, size]) => ({ ...result, [id]: { ext, size } }), {});
+
+const getOutFilesMeta = async () => {
+  const outFilesPath = await fs.readdir(outDirPath);
+
+  const result = {};
+
+  for (const fileName of outFilesPath) {
+    const { name: id, ext } = path.parse(fileName);
+    const { size } = await fs.lstat(path.join(outDirPath, fileName));
+
+    if (!result[id]) result[id] = [];
+
+    result[id].push({ ext, size });
+  }
+
+  return result;
 };
 
 beforeEach(() => {
   return rmOutDir();
 });
 
-test("creates 5 images", async () => {
-  const options = { filePath: originalImagePath, outDir: outDirPath };
+afterAll(() => {
+  return rmOutDir();
+});
+
+test(`creates ${Object.values(extByCodec).join(", ")} compressed images for each original image`, async () => {
+  const options = { filePaths: fixtureImagesPath, outDir: outDirPath };
   await easyimg(options);
 
-  const filesMeta = await getOutDirFilesMeta();
+  const outFilesMeta = await getOutFilesMeta();
 
-  expect(filesMeta).toHaveLength(5);
+  expect(Object.keys(outFilesMeta)).toHaveLength(fixtureImagesPath.length);
 
-  for (const fileMeta of filesMeta) {
-    const ext = path.extname(fileMeta.filePath);
+  for (const fixtureImagePath of fixtureImagesPath) {
+    const { name, ext: originalFileExt } = path.parse(fixtureImagePath);
+    const originalFileMeta = originalFilesMeta[name];
+    const outFileMeta = outFilesMeta[name];
 
-    if (ext !== ".png") {
-      expect(fileMeta.size).toBeLessThan(await getOriginalFileSize());
-    } else {
-      expect(fileMeta.size).toBeGreaterThan(await getOriginalFileSize());
+    let usedExt = Object.values(extByCodec);
+
+    for (const outFile of outFileMeta) {
+      usedExt = usedExt.filter((ext) => ext !== outFile.ext);
+
+      if (originalFileMeta.ext !== ".png" && outFile.ext === ".png") {
+        expect(outFile.size).toBeGreaterThan(originalFileMeta.size);
+      } else {
+        expect(outFile.size).toBeLessThan(originalFileMeta.size);
+      }
     }
+
+    expect(usedExt).toHaveLength(0);
   }
 }, 20000);

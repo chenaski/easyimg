@@ -8,13 +8,13 @@ import { logError } from "./logError.js";
   program.parse();
 
   const options = program.opts();
-  const filePath = program.rawArgs[program.rawArgs.length - 1];
+  const filePaths = program.rawArgs[program.rawArgs.length - 1];
 
   const schema = Joi.object({
-    filePath: Joi.string().required(),
+    filePaths: Joi.string().required(),
     outDir: Joi.string().required(),
   });
-  const validationResult = schema.validate({ filePath, ...options });
+  const validationResult = schema.validate({ filePaths, ...options });
 
   if (validationResult.error) {
     logError(validationResult.error);
