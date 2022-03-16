@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node src/cli.js --out-dir \"out\" \"fixtures/*.jpg\"",
-    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest"
+    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --runInBand"
   },
   "simple-git-hooks": {
     "commit-msg": "npx git-conventional-commits commit-msg-hook \"$1\"",

@@ -1,50 +1,13 @@
-import { easyimg } from "./index.js";
-import fs from "fs/promises";
-import { fileURLToPath } from "url";
 import path from "path";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const outDirPath = path.resolve(__dirname, "../out");
-const fixturesDirPath = path.resolve(__dirname, "../fixtures");
-const fixtureImagesPath = (await fs.readdir(fixturesDirPath)).map((fileName) => path.join(fixturesDirPath, fileName));
-const extByCodec = {
-  oxipng: ".png",
-  mozjpeg: ".jpg",
-  webp: ".webp",
-  avif: ".avif",
-  jxl: ".jxl",
-};
-
-const rmOutDir = async () => {
-  await fs.rm(outDirPath, { force: true, recursive: true });
-};
-
-const originalFilesMeta = (
-  await Promise.all(
-    fixtureImagesPath.map(async (filePath) => {
-      const { name: id, ext } = path.parse(filePath);
-      const { size } = await fs.lstat(filePath);
-      return [id, ext, size];
-    })
-  )
-).reduce((result, [id, ext, size]) => ({ ...result, [id]: { ext, size } }), {});
-
-const getOutFilesMeta = async () => {
-  const outFilesPath = await fs.readdir(outDirPath);
-
-  const result = {};
-
-  for (const fileName of outFilesPath) {
-    const { name: id, ext } = path.parse(fileName);
-    const { size } = await fs.lstat(path.join(outDirPath, fileName));
-
-    if (!result[id]) result[id] = [];
-
-    result[id].push({ ext, size });
-  }
-
-  return result;
-};
+import { easyimg } from "./index.js";
+import {
+  extByCodec,
+  fixtureImagesPath,
+  getOutFilesMeta,
+  originalFilesMeta,
+  outDirPath,
+  rmOutDir,
+} from "./testUtils.js";
 
 beforeEach(() => {
   return rmOutDir();
