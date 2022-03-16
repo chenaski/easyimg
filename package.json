@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "start": "node src/cli.js --out-dir \"out\" \"fixtures/test.jpg\"",
+    "start": "node src/cli.js --out-dir \"out\" \"fixtures/*.jpg\"",
     "test": "NODE_OPTIONS=--experimental-vm-modules npx jest"
   },
   "simple-git-hooks": {
@@ -36,6 +36,7 @@
   "dependencies": {
     "@squoosh/lib": "^0.4.0",
     "commander": "^9.0.0",
-    "joi": "^17.6.0"
+    "joi": "^17.6.0",
+    "tiny-glob": "^0.2.9"
   }
 }
