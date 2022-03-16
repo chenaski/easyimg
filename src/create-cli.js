@@ -2,7 +2,7 @@ import { program } from "commander";
 import Joi from "joi";
 import glob from "tiny-glob";
 
-import { logError } from "./logError.js";
+import { logError } from "./log-error.js";
 
 export function createCli({ processor }) {
   return async function cli({ cliOptions } = {}) {

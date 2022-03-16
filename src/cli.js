@@ -1,4 +1,4 @@
-import { createCli } from "./createCli.js";
+import { createCli } from "./create-cli.js";
 import { easyimg } from "./index.js";
 
 (async () => {

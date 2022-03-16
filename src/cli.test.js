@@ -1,8 +1,8 @@
 import { jest } from "@jest/globals";
 import path from "path";
-import { createCli } from "./createCli.js";
+import { createCli } from "./create-cli.js";
 
-import { fixtureImagesPath, fixturesDirPath } from "./testUtils.js";
+import { fixtureImagesPath, fixturesDirPath } from "./test-utils.js";
 
 const processorMock = jest.fn();
 const runCli = createCli({ processor: processorMock });

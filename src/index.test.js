@@ -7,7 +7,7 @@ import {
   originalFilesMeta,
   outDirPath,
   rmOutDir,
-} from "./testUtils.js";
+} from "./test-utils.js";
 
 beforeEach(() => {
   return rmOutDir();
