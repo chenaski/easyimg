@@ -1,7 +1,7 @@
 import { jest } from "@jest/globals";
 import path from "path";
-import { createCli } from "./create-cli.js";
 
+import { createCli } from "./create-cli.js";
 import { fixtureImagesPath, fixturesDirPath } from "./test-utils.js";
 
 const processorMock = jest.fn();
@@ -16,7 +16,8 @@ test("doesn't runs API if no files were found", async () => {
   const outDir = "output-directory";
   const options = `--out-dir ${outDir} ${globPattern}`;
 
-  const mockExit = jest.spyOn(process, "exit").mockImplementation(() => {});
+  const mockExit = jest.spyOn(process, "exit");
+  (mockExit as unknown as jest.Mock).mockImplementation(() => {});
 
   const result = await runCli({ cliOptions: `node ./cli.js ${options}`.split(" ") });
 

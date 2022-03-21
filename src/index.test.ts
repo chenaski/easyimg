@@ -1,4 +1,5 @@
 import path from "path";
+
 import { easyimg } from "./index.js";
 import {
   extByCodec,

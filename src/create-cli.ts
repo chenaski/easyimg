@@ -1,16 +1,19 @@
-import { program } from "commander";
+import { Command } from "commander";
 import Joi from "joi";
 import glob from "tiny-glob";
 
 import { logError } from "./log-error.js";
+import { Options, Processor } from "./global.js";
 
-export function createCli({ processor }) {
-  return async function cli({ cliOptions } = {}) {
+export function createCli({ processor }: { processor: Processor }) {
+  return async function cli({ cliOptions }: { cliOptions?: string[] } = {}): Promise<void> {
+    const program = new Command();
+
     program.option("-o, --out-dir <path>", "Output directory");
     program.parse(cliOptions || process.argv);
 
     const options = program.opts();
-    const globPattern = program.rawArgs[program.rawArgs.length - 1];
+    const globPattern = program.args[0];
 
     const schema = Joi.object({
       globPattern: Joi.string().required(),
@@ -19,12 +22,12 @@ export function createCli({ processor }) {
     const validationResult = schema.validate({ globPattern, ...options });
 
     if (validationResult.error) {
-      logError(validationResult.error);
+      logError(validationResult.error.message);
       process.exit(1);
       return;
     }
 
-    const filePaths = await glob(validationResult.value.globPattern);
+    const filePaths: string[] = await glob(validationResult.value.globPattern);
 
     if (!filePaths.length) {
       logError(

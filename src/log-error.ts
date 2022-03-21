@@ -1,4 +1,4 @@
-export function logError(message) {
+export function logError(message: string): void {
   console.log(`
 Oops! Something went wrong! :(
 

@@ -8,19 +8,32 @@ export const fixturesDirPath = path.resolve(currentDirPath, "../fixtures");
 export const fixtureImagesPath = (await fs.readdir(fixturesDirPath)).map((fileName) =>
   path.join(fixturesDirPath, fileName)
 );
+export enum Codecs {
+  oxipng = "oxipng",
+  mozjpeg = "mozjpeg",
+  webp = "webp",
+  avif = "avif",
+  jxl = "jxl",
+}
 export const extByCodec = {
-  oxipng: ".png",
-  mozjpeg: ".jpg",
-  webp: ".webp",
-  avif: ".avif",
-  jxl: ".jxl",
+  [Codecs.oxipng]: ".png",
+  [Codecs.mozjpeg]: ".jpg",
+  [Codecs.webp]: ".webp",
+  [Codecs.avif]: ".avif",
+  [Codecs.jxl]: ".jxl",
 };
 
-export const rmOutDir = async () => {
+export interface FileMeta {
+  ext: string;
+  size: number;
+}
+
+export const rmOutDir = async (): Promise<void> => {
   await fs.rm(outDirPath, { force: true, recursive: true });
 };
 
-export const originalFilesMeta = (
+export type OriginalFilesMeta = Record<string, FileMeta>;
+export const originalFilesMeta: OriginalFilesMeta = (
   await Promise.all(
     fixtureImagesPath.map(async (filePath) => {
       const { name: id, ext } = path.parse(filePath);
@@ -30,10 +43,11 @@ export const originalFilesMeta = (
   )
 ).reduce((result, [id, ext, size]) => ({ ...result, [id]: { ext, size } }), {});
 
-export const getOutFilesMeta = async () => {
+export type OutFilesMeta = Record<string, FileMeta[]>;
+export const getOutFilesMeta = async (): Promise<OutFilesMeta> => {
   const outFilesPath = await fs.readdir(outDirPath);
 
-  const result = {};
+  const result: OutFilesMeta = {} as OutFilesMeta;
 
   for (const fileName of outFilesPath) {
     const { name: id, ext } = path.parse(fileName);
