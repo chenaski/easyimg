@@ -1,4 +1,4 @@
-import { Options } from "./index.js";
+import { Options } from "./api.js";
 
 export interface Options {
   filePaths: string[];

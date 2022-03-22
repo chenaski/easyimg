@@ -1,7 +1,7 @@
 import { createCli } from "./create-cli.js";
-import { easyimg } from "./index.js";
+import { api } from "./api.js";
 
 (async () => {
-  const runCli = createCli({ processor: easyimg });
+  const runCli = createCli({ processor: api });
   await runCli();
 })();

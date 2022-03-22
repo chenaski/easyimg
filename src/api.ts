@@ -7,7 +7,7 @@ import { ImagePool } from "@squoosh/lib";
 import { Codecs } from "./test-utils";
 import { Options } from "./global.js";
 
-export async function easyimg(options: Options): Promise<void> {
+export async function api(options: Options): Promise<void> {
   const imagePool = new ImagePool(cpus().length);
 
   await fs.mkdir(options.outDir, { recursive: true });

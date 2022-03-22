@@ -1,6 +1,6 @@
 import path from "path";
 
-import { easyimg } from "./index.js";
+import { api } from "./api.js";
 import {
   extByCodec,
   fixtureImagesPath,
@@ -20,7 +20,7 @@ afterAll(() => {
 
 test(`creates ${Object.values(extByCodec).join(", ")} compressed images for each original image`, async () => {
   const options = { filePaths: fixtureImagesPath, outDir: outDirPath };
-  await easyimg(options);
+  await api(options);
 
   const outFilesMeta = await getOutFilesMeta();
 
