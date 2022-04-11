@@ -1,9 +1,11 @@
 import path from "path";
+import { jest } from "@jest/globals";
 
-import { api } from "./api.js";
+import { createProcessor, processor } from "./processor.js";
 import {
   extByCodec,
   fixtureImagesPath,
+  fixturesGlobPattern,
   getOutFilesMeta,
   originalFilesMeta,
   outDirPath,
@@ -19,8 +21,8 @@ afterAll(() => {
 });
 
 test(`creates ${Object.values(extByCodec).join(", ")} compressed images for each original image`, async () => {
-  const options = { filePaths: fixtureImagesPath, outDir: outDirPath };
-  await api(options);
+  const options = { target: fixturesGlobPattern, outDir: outDirPath };
+  await processor(options);
 
   const outFilesMeta = await getOutFilesMeta();
 
@@ -46,3 +48,23 @@ test(`creates ${Object.values(extByCodec).join(", ")} compressed images for each
     expect(usedExt).toHaveLength(0);
   }
 }, 20000);
+
+describe("runs `onError` hook", () => {
+  test("no files found", async () => {
+    const onErrorHookMock = jest.fn();
+    const processor = createProcessor({ hooks: { onError: onErrorHookMock } });
+
+    await processor({ target: "error", outDir: outDirPath });
+
+    expect(onErrorHookMock).toHaveBeenCalledTimes(1);
+  });
+
+  test("options scheme is invalid", async () => {
+    const onErrorHookMock = jest.fn();
+    const processor = createProcessor({ hooks: { onError: onErrorHookMock } });
+
+    await processor({ target: fixturesGlobPattern, outDir: outDirPath, scheme: "invalid" });
+
+    expect(onErrorHookMock).toHaveBeenCalledTimes(1);
+  });
+});

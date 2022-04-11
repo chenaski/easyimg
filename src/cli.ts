@@ -1,7 +1,14 @@
 import { createCli } from "./create-cli.js";
-import { api } from "./api.js";
+import { createProcessor, processor } from "./processor.js";
 
 (async () => {
-  const runCli = createCli({ processor: api });
+  const processor = createProcessor({
+    hooks: {
+      onError: () => {
+        process.exit(1);
+      },
+    },
+  });
+  const runCli = createCli({ processor });
   await runCli();
 })();

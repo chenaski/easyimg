@@ -5,6 +5,7 @@ import fs from "fs/promises";
 export const currentDirPath = path.dirname(fileURLToPath(import.meta.url));
 export const outDirPath = path.resolve(currentDirPath, "../out");
 export const fixturesDirPath = path.resolve(currentDirPath, "../fixtures");
+export const fixturesGlobPattern = path.join(fixturesDirPath, "*.jpg");
 export const fixtureImagesPath = (await fs.readdir(fixturesDirPath)).map((fileName) =>
   path.join(fixturesDirPath, fileName)
 );
